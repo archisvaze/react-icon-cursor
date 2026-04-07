@@ -36,6 +36,8 @@ export default function useReactIconCursor({ color = '#000000', size = 24, curso
             return `data:image/svg+xml,${encodeURIComponent(raw)}`;
         };
 
+        // TODO - add support for custom selectors - user can add custom classname and it will be applied?
+
         const cursorSelectors = {
             default: 'body, .cursor-default',
             pointer: 'a, button, [role="button"], .cursor-pointer',
