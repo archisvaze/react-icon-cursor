@@ -1,0 +1,63 @@
+{
+    "name": "react-icon-cursor",
+    "version": "0.0.1",
+    "description": "",
+    "license": "MIT",
+    "author": "archisvaze",
+    "keywords": [],
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "main": "./dist/react-icon-cursor.umd.js",
+    "module": "./dist/react-icon-cursor.es.js",
+    "exports": {
+        ".": {
+            "import": "./dist/react-icon-cursor.es.js",
+            "require": "./dist/react-icon-cursor.umd.js"
+        }
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "test": "vitest run",
+        "watch": "vitest",
+        "coverage": "vitest run --coverage"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "eslintConfig": {
+        "env": {
+            "browser": true,
+            "node": true,
+            "es2020": true
+        },
+        "extends": [
+            "eslint:recommended",
+            "plugin:react/recommended"
+        ],
+        "parserOptions": {
+            "sourceType": "module"
+        }
+    },
+    "devDependencies": {
+        "@vitejs/plugin-react": "^5.1.2",
+        "react": "^19.2.3",
+        "react-dom": "^19.2.3",
+        "vite": "^7.3.1"
+    },
+    "peerDependencies": {
+        "react": ">=16.8.0",
+        "react-dom": ">=16.8.0"
+    }
+}
