@@ -23,9 +23,13 @@ export default function App() {
     const Icon = icons.find((i) => i.id === activeIcon).Icon;
 
     useReactIconCursor({
-        icon: Icon,
         color,
         size,
+        cursors: {
+            default: Icon,
+            pointer: FaHandPointer,
+            text: LuMousePointer2,
+        },
     });
 
     return (
@@ -75,6 +79,21 @@ export default function App() {
                     onChange={(e) => setSize(Number(e.target.value))}
                     style={{ width: 200, display: 'block', marginTop: 10 }}
                 />
+            </div>
+
+            <div style={{ marginTop: 30 }}>
+                <input
+                    placeholder='Input field (text cursor)'
+                    style={{ padding: 10, marginRight: 10 }}
+                />
+                <textarea
+                    placeholder='Textarea (text cursor)'
+                    style={{ padding: 10 }}
+                />
+            </div>
+
+            <div style={{ marginTop: 20 }}>
+                <a href='#'>Hover me (pointer cursor)</a>
             </div>
         </div>
     );
