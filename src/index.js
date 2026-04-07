@@ -38,12 +38,12 @@ export default function useReactIconCursor({ color = '#000000', size = 24, curso
 
         const cursorSelectors = {
             default: 'body, .cursor-default',
-            pointer: 'a, button, [role="button"], .cursor-pointer, [type="range"]',
-            text: 'input, textarea, [contenteditable="true"], .cursor-text',
-            grab: '[draggable="true"], .cursor-grab',
-            move: '.cursor-move',
-            crosshair: '.cursor-crosshair',
-            'not-allowed': '.cursor-not-allowed',
+            pointer: 'a, button, [role="button"], .cursor-pointer',
+            // text: 'input, textarea, [contenteditable="true"], .cursor-text',
+            // grab: '[draggable="true"], .cursor-grab',
+            // move: '.cursor-move',
+            // crosshair: '.cursor-crosshair',
+            // 'not-allowed': '.cursor-not-allowed',
         };
 
         let css = '';
