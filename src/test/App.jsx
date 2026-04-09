@@ -173,7 +173,7 @@ npm install react-icon-cursor react-icons
 
 # Usage
 
-import useReactIconCursor from 'react-icon-cursor';
+import { useReactIconCursor } from 'react-icon-cursor';
 import { ${selectedIcon.name} } from 'react-icons/${selectedIcon.name.startsWith('Fa') ? 'fa6' : selectedIcon.name.startsWith('Bs') ? 'bs' : selectedIcon.name.startsWith('Hi') ? 'hi' : selectedIcon.name.startsWith('Pi') ? 'pi' : 'fa6'}';
 
 const config = {
