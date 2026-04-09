@@ -1,27 +1,36 @@
 import { useState } from 'react';
-import { FaArrowPointer, FaBug, FaCloud, FaCrosshairs, FaGhost, FaHandPointer, FaHeart, FaRocket, FaSkull, FaStar } from 'react-icons/fa6';
+import { BsFillCursorFill, BsFillMouseFill } from 'react-icons/bs';
+import { FaCross } from 'react-icons/fa';
+import { FaArrowPointer, FaBug, FaGhost, FaGun, FaHandPointer, FaHeart, FaRocket, FaSkull, FaStar, FaWandSparkles } from 'react-icons/fa6';
+import { HiCursorClick } from 'react-icons/hi';
+import { PiSwordFill } from 'react-icons/pi';
 import useReactIconCursor from '../index.js';
 
 export default function App() {
     const [size, setSize] = useState(28);
     const [color, setColor] = useState('#60a5fa');
-    const [iconType, setIconType] = useState('arrow');
+    const [iconType, setIconType] = useState(0); // now index
     const [hotspot, setHotspot] = useState('topLeft');
 
-    const iconMap = {
-        arrow: FaArrowPointer,
-        hand: FaHandPointer,
-        crosshair: FaCrosshairs,
-        ghost: FaGhost,
-        rocket: FaRocket,
-        heart: FaHeart,
-        skull: FaSkull,
-        star: FaStar,
-        bug: FaBug,
-        cloud: FaCloud,
-    };
+    const iconList = [
+        FaArrowPointer,
+        FaHandPointer,
+        BsFillMouseFill,
+        FaGhost,
+        FaRocket,
+        FaHeart,
+        FaSkull,
+        FaStar,
+        FaBug,
+        HiCursorClick,
+        FaCross,
+        BsFillCursorFill,
+        FaWandSparkles,
+        FaGun,
+        PiSwordFill,
+    ];
 
-    const selectedIcon = iconMap[iconType];
+    const selectedIcon = iconList[iconType];
 
     const colors = ['#60a5fa', '#f472b6', '#34d399', '#facc15', '#f87171', '#a78bfa', '#fb923c', '#22d3ee', '#e5e7eb', '#111827'];
 
@@ -31,7 +40,7 @@ export default function App() {
         '*': {
             icon: selectedIcon,
             size,
-            color,
+            style: { color },
             hotspot,
             fallback: 'auto',
         },
@@ -69,7 +78,7 @@ export default function App() {
                                 onClick={() => setColor(c)}
                                 className={`
                                     w-8 h-8 rounded-lg border-2 transition
-                                    ${color === c ? 'border-white scale-110' : 'border-transparent'}
+                                    ${color === c ? 'border-white scale-110 opacity-20' : 'border-transparent'}
                                 `}
                                 style={{ backgroundColor: c }}
                             />
@@ -81,13 +90,13 @@ export default function App() {
                 <div>
                     <label className='text-sm text-gray-400'>Icon</label>
                     <div className='grid grid-cols-5 gap-2 mt-2'>
-                        {Object.entries(iconMap).map(([key, Icon]) => {
-                            const isActive = iconType === key;
+                        {iconList.map((Icon, index) => {
+                            const isActive = iconType === index;
 
                             return (
                                 <button
-                                    key={key}
-                                    onClick={() => setIconType(key)}
+                                    key={index}
+                                    onClick={() => setIconType(index)}
                                     className={`
                                         p-3 rounded-xl border transition flex items-center justify-center
                                         ${
@@ -107,7 +116,7 @@ export default function App() {
                 <div>
                     <label className='text-sm text-gray-400'>Hotspot</label>
 
-                    <div className='relative mt-3 w-40 h-40 mx-auto bg-[#020617] border border-gray-700 rounded-xl flex items-center justify-center'>
+                    <div className='relative mt-3 w-40 h-fit mx-auto bg-[#020617] border border-gray-700 rounded-xl flex items-center justify-center'>
                         {(() => {
                             const SelectedIcon = selectedIcon;
                             return (

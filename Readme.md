@@ -1,167 +1,213 @@
 # react-icon-cursor
 
-Use React icons as custom cursors. No images, no assets, just components.
+Turn any React icon into your cursor. A ghost. A rocket. A sword. Your call.
+
+---
+
+## What is this?
+
+A tiny hook that takes a React icon, converts it into an SVG data URL, and injects it into CSS as a cursor.
+
+No canvas hacks. No external assets. Just React → SVG → cursor.
 
 ---
 
 ## Install
 
-```
+```bash
 npm install react-icon-cursor react-icons
 ```
 
-react-icons is required because this library renders icon components into SVG cursors.
-
 ---
 
-## Basic Usage
+## Usage
 
-```
+### 1. Import the hook
+
+```js
 import useReactIconCursor from 'react-icon-cursor';
-import { FaArrowPointer } from 'react-icons/fa6';
+```
 
-function App() {
-  useReactIconCursor({
+---
+
+### 2. Pick an icon
+
+```js
+import { FaGhost } from 'react-icons/fa6';
+```
+
+---
+
+### 3. Configure the cursor
+
+```js
+const config = {
     body: {
-      icon: FaArrowPointer,
-      size: 24,
-      color: '#2563eb'
+        icon: FaGhost,
+        size: 24,
+        style: { color: '#60a5fa' },
+        hotspot: 'topLeft',
+        fallback: 'auto',
+    },
+};
+```
+
+---
+
+### 4. Use the hook
+
+```js
+useReactIconCursor(config);
+```
+
+---
+
+## Config API
+
+Each selector maps to a cursor config.
+
+```js
+{
+    selector: {
+        (icon, size, style, hotspot, fallback);
     }
-  });
-
-  return <div>Hover anywhere</div>;
 }
 ```
 
----
+### selector
 
-## API
+Any valid CSS selector.
 
+```js
+'*'; // everything
+'button'; // only buttons
+'.card'; // class
+'#app'; // id
 ```
-useReactIconCursor({
-  [selector]: {
-    icon: ReactComponent,
-    size: number,
-    color: string,
-    hotspot: string | [x, y],
-    fallback: string
-  }
-})
-```
-
-Defaults:
-
-- size: 16
-- color: black
-- hotspot: topLeft
-- fallback: auto
 
 ---
 
-## Selectors
+### icon (required)
 
-Any valid CSS selector works:
+A React icon component.
 
+```js
+import { FaRocket } from 'react-icons/fa6';
+
+icon: FaRocket;
 ```
-{
-  body: {...},
-  '.button': {...},
-  '#app': {...},
-  'a:hover': {...}
+
+---
+
+### size (default: 16)
+
+Pixel size of the cursor.
+
+```js
+size: 32;
+```
+
+---
+
+### style (default: black)
+
+Inline styles applied to the icon.
+
+```js
+style: {
+    color: '#ff0000';
 }
 ```
 
+You can pass anything React accepts:
+
+- color
+- opacity
+
 ---
 
-## Hotspot
+### hotspot (default: topLeft)
 
-Defines where the click happens inside the cursor.
+Controls the actual click point.
 
-Presets:
+You can use:
 
-topLeft  
-top  
-topRight  
-left  
-center  
-right  
-bottomLeft  
-bottom  
-bottomRight
+#### Named positions
 
-Example:
-
-```
-{
-  body: {
-    icon: FaArrowPointer,
-    hotspot: 'topLeft'
-  }
-}
+```js
+topLeft;
+top;
+topRight;
+left;
+center;
+right;
+bottomLeft;
+bottom;
+bottomRight;
 ```
 
-Custom coordinates:
+#### Or exact coordinates
 
-```
-{
-  body: {
-    icon: FaArrowPointer,
-    hotspot: [4, 2]
-  }
-}
+```js
+hotspot: [10, 10];
 ```
 
 ---
 
-## Fallback
+### fallback (default: auto)
 
-Always include a fallback:
+Fallback cursor if something fails.
 
-fallback: 'pointer'
-
-If the custom cursor fails, the browser falls back to this.
+```js
+fallback: 'pointer';
+```
 
 ---
 
-## Notes
+## Multiple cursors
 
-- Desktop browsers only. Mobile ignores cursors.
-- Keep sizes reasonable. Large SVGs may fail.
-- Some browsers have data URL limits.
+You can scope different cursors to different elements.
+
+```js
+const config = {
+    '*': {
+        icon: FaGhost,
+    },
+    button: {
+        icon: FaHandPointer,
+        fallback: 'pointer',
+    },
+};
+```
 
 ---
 
-## Example
+## How it works
 
-```
-import { FaArrowPointer, FaHandPointer } from 'react-icons/fa6';
+- React icon → rendered to static SVG
+- SVG → encoded into data URL
+- CSS injected into `<style>` tag
+- Browser uses it as cursor
 
-useReactIconCursor({
-  body: {
-    icon: FaArrowPointer,
-    size: 24,
-    color: '#2563eb',
-    hotspot: 'topLeft'
-  },
-  '.clickable': {
-    icon: FaHandPointer,
-    size: 20,
-    color: '#111',
-    fallback: 'pointer'
-  }
-});
-```
+---
+
+## Gotchas
+
+- Very large sizes can look blurry depending on the browser
+- Some browsers clamp cursor size
+- `!important` is used intentionally to override defaults
+- If your cursor is not updating, check selector specificity
 
 ---
 
 ## Why this exists
 
-Custom cursors are usually image files and annoying to manage.
+Because default cursors are boring.
 
-This keeps everything inside React and lets you reuse your icon system.
+And because React icons are already in your bundle, so why not reuse them in the weirdest possible way.
 
 ---
 
-## License
+## Final note
 
-MIT
+If you end up shipping a production app where users have a sword as a cursor, that’s on you lol.

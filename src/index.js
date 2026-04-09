@@ -32,7 +32,7 @@ export default function useReactIconCursor(config = {}) {
             document.head.appendChild(style);
         }
 
-        const generateCursor = (IconComponent, size, color) => {
+        const generateCursor = (IconComponent, size, style) => {
             if (!IconComponent) {
                 console.warn('[useReactIconCursor] Missing icon component');
                 return null;
@@ -42,7 +42,7 @@ export default function useReactIconCursor(config = {}) {
                 const raw = renderToStaticMarkup(
                     createElement(IconComponent, {
                         size,
-                        style: { color },
+                        style,
                     }),
                 );
 
@@ -89,14 +89,19 @@ export default function useReactIconCursor(config = {}) {
                 return;
             }
 
-            const { icon, size = defaultSize, color = defaultColor, fallback = 'auto', hotspot = 'topLeft' } = entry;
+            const { icon, size = defaultSize, style = { color: defaultColor }, fallback = 'auto', hotspot = 'topLeft' } = entry;
 
             if (!icon) {
                 console.warn(`[useReactIconCursor] Missing icon for selector "${selector}"`);
                 return;
             }
 
-            const encoded = generateCursor(icon, size, color);
+            if (typeof style !== 'object') {
+                console.warn(`[useReactIconCursor] Invalid style for selector "${selector}": ${style}`);
+                return;
+            }
+
+            const encoded = generateCursor(icon, size, style);
             if (!encoded) {
                 return;
             }
