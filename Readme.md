@@ -2,7 +2,7 @@
 
 Turn any React icon into your cursor. A ghost. A rocket. A sword. Your call.
 
----
+![Screen Recording](https://github.com/user-attachments/assets/626d09c3-9d51-430f-b913-8aad031a9a47)
 
 ## What is this?
 
@@ -25,7 +25,7 @@ npm install react-icon-cursor react-icons
 ### 1. Import the hook
 
 ```js
-import useReactIconCursor from 'react-icon-cursor';
+import { useReactIconCursor } from 'react-icon-cursor';
 ```
 
 ---
