@@ -1,10 +1,25 @@
 import { createElement, useEffect } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-export default function useReactIconCursor({ color = '#000000', size = 24, cursors } = {}) {
+const defaultSize = 16;
+const defaultColor = '#000000';
+
+const hotspotMap = {
+    topLeft: [0, 0],
+    top: ['50%', 0],
+    topRight: ['100%', 0],
+    left: [0, '50%'],
+    center: ['50%', '50%'],
+    right: ['100%', '50%'],
+    bottomLeft: [0, '100%'],
+    bottom: ['50%', '100%'],
+    bottomRight: ['100%', '100%'],
+};
+
+export default function useReactIconCursor(config = {}) {
     useEffect(() => {
-        if (!cursors || typeof cursors !== 'object' || Object.keys(cursors).length === 0) {
-            console.warn('No cursors provided');
+        if (!config || typeof config !== 'object' || Object.keys(config).length === 0) {
+            console.warn('[useReactIconCursor] No cursor config provided');
             return;
         }
 
@@ -17,53 +32,86 @@ export default function useReactIconCursor({ color = '#000000', size = 24, curso
             document.head.appendChild(style);
         }
 
-        const generateCursor = (IconComponent) => {
-            if (!IconComponent) return null;
+        const generateCursor = (IconComponent, size, color) => {
+            if (!IconComponent) {
+                console.warn('[useReactIconCursor] Missing icon component');
+                return null;
+            }
 
-            let raw;
             try {
-                raw = renderToStaticMarkup(
+                const raw = renderToStaticMarkup(
                     createElement(IconComponent, {
                         size,
                         style: { color },
                     }),
                 );
+
+                return `data:image/svg+xml,${encodeURIComponent(raw)}`;
             } catch (e) {
-                console.error('Failed to render icon:', e.message);
+                console.error('[useReactIconCursor] Failed to render icon:', e.message);
                 return null;
             }
-
-            return `data:image/svg+xml,${encodeURIComponent(raw)}`;
         };
 
-        // TODO - add support for custom selectors - user can add custom classname and it will be applied?
+        const resolveHotspot = (hotspot, size) => {
+            if (!hotspot) {
+                return '0 0';
+            }
 
-        const cursorSelectors = {
-            default: 'body, .cursor-default',
-            pointer: 'a, button, [role="button"], .cursor-pointer',
-            // text: 'input, textarea, [contenteditable="true"], .cursor-text',
-            // grab: '[draggable="true"], .cursor-grab',
-            // move: '.cursor-move',
-            // crosshair: '.cursor-crosshair',
-            // 'not-allowed': '.cursor-not-allowed',
+            if (Array.isArray(hotspot) && hotspot.length === 2) {
+                return `${hotspot[0]} ${hotspot[1]}`;
+            }
+
+            if (typeof hotspot === 'string') {
+                const mapped = hotspotMap[hotspot];
+
+                if (!mapped) {
+                    console.warn(`[useReactIconCursor] Invalid hotspot "${hotspot}". Falling back to topLeft.`);
+                    return '0 0';
+                }
+
+                const [x, y] = mapped;
+
+                const resolve = (val) => (typeof val === 'string' ? Math.round((parseFloat(val) / 100) * size) : val);
+
+                return `${resolve(x)} ${resolve(y)}`;
+            }
+
+            console.warn(`[useReactIconCursor] Invalid hotspot format. Expected string or [x,y]. Falling back to topLeft.`);
+            return '0 0';
         };
 
         let css = '';
 
-        Object.entries(cursors).forEach(([type, IconComponent]) => {
-            const selector = cursorSelectors[type];
-            if (!selector || !IconComponent) return;
+        Object.entries(config).forEach(([selector, entry]) => {
+            if (!entry || typeof entry !== 'object') {
+                console.warn(`[useReactIconCursor] Invalid entry for selector "${selector}"`);
+                return;
+            }
 
-            const encoded = generateCursor(IconComponent);
-            if (!encoded) return;
+            const { icon, size = defaultSize, color = defaultColor, fallback = 'auto', hotspot = 'topLeft' } = entry;
 
-            css += `${selector} { cursor: url("${encoded}"), auto !important; }\n`;
+            if (!icon) {
+                console.warn(`[useReactIconCursor] Missing icon for selector "${selector}"`);
+                return;
+            }
+
+            const encoded = generateCursor(icon, size, color);
+            if (!encoded) {
+                return;
+            }
+
+            const hotspotCoords = resolveHotspot(hotspot, size);
+
+            css += `
+${selector} {
+    cursor: url("${encoded}") ${hotspotCoords}, ${fallback} !important;
+}
+`;
         });
 
-        console.log(css);
-
-        if (!css) {
-            console.warn('No valid cursor entries');
+        if (!css.trim()) {
+            console.warn('[useReactIconCursor] No valid cursor entries');
             style.textContent = '';
             return;
         }
@@ -75,5 +123,5 @@ export default function useReactIconCursor({ color = '#000000', size = 24, curso
                 style.parentNode.removeChild(style);
             }
         };
-    }, [cursors, color, size]);
+    }, [config]);
 }

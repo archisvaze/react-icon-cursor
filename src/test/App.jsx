@@ -1,104 +1,163 @@
 import { useState } from 'react';
+import { FaArrowPointer, FaBug, FaCloud, FaCrosshairs, FaGhost, FaHandPointer, FaHeart, FaRocket, FaSkull, FaStar } from 'react-icons/fa6';
 import useReactIconCursor from '../index.js';
 
-import { FaHandPaper, FaHandPointer } from 'react-icons/fa';
-import { FaArrowPointer } from 'react-icons/fa6';
-import { TbPointerFilled } from 'react-icons/tb';
-
-const defaultIcons = [
-    { id: 'FaArrowPointer', Icon: FaArrowPointer },
-    { id: 'TbPointerFilled', Icon: TbPointerFilled },
-];
-
-const pointerIcons = [
-    { id: 'FaHandPointer', Icon: FaHandPointer },
-    { id: 'FaHandPaper', Icon: FaHandPaper },
-];
-
-const colors = ['#e04400', '#2563eb', '#16a34a', '#9333ea', '#000000', '#ef4444', '#f59e0b', '#10b981', '#06b6d4', '#8b5cf6', '#ec4899'];
-
 export default function App() {
-    const [defaultIcon, setDefaultIcon] = useState('FaArrowPointer');
-    const [pointerIcon, setPointerIcon] = useState('FaHandPointer');
-
-    const [color, setColor] = useState('#e04400');
     const [size, setSize] = useState(28);
+    const [color, setColor] = useState('#60a5fa');
+    const [iconType, setIconType] = useState('arrow');
+    const [hotspot, setHotspot] = useState('topLeft');
 
-    const getIcon = (list, id) => list.find((i) => i.id === id).Icon;
+    const iconMap = {
+        arrow: FaArrowPointer,
+        hand: FaHandPointer,
+        crosshair: FaCrosshairs,
+        ghost: FaGhost,
+        rocket: FaRocket,
+        heart: FaHeart,
+        skull: FaSkull,
+        star: FaStar,
+        bug: FaBug,
+        cloud: FaCloud,
+    };
 
-    useReactIconCursor({
-        color,
-        size,
-        cursors: {
-            default: getIcon(defaultIcons, defaultIcon),
-            pointer: getIcon(pointerIcons, pointerIcon),
-            // text: getIcon(textIcons, textIcon),
-            // grab: getIcon(grabIcons, grabIcon),
-            // move: getIcon(moveIcons, moveIcon),
-            // crosshair: getIcon(crosshairIcons, crosshairIcon),
-            // 'not-allowed': getIcon(notAllowedIcons, notAllowedIcon),
+    const selectedIcon = iconMap[iconType];
+
+    const colors = ['#60a5fa', '#f472b6', '#34d399', '#facc15', '#f87171', '#a78bfa', '#fb923c', '#22d3ee', '#e5e7eb', '#111827'];
+
+    const hotspotPositions = ['topLeft', 'top', 'topRight', 'left', 'center', 'right', 'bottomLeft', 'bottom', 'bottomRight'];
+
+    const config = {
+        '*': {
+            icon: selectedIcon,
+            size,
+            color,
+            hotspot,
+            fallback: 'auto',
         },
-    });
+    };
+
+    useReactIconCursor(config);
 
     return (
-        <div className='p-6 max-w-5xl mx-auto space-y-8'>
-            <h2 className='text-2xl font-semibold'>React Icon Cursor Demo</h2>
-
-            <div>
-                <h4 className='text-sm font-medium mb-2 text-gray-500'>Default</h4>
-                <div className='flex flex-wrap gap-2'>
-                    {defaultIcons.map(({ id, Icon }) => (
-                        <button
-                            key={id}
-                            onClick={() => setDefaultIcon(id)}
-                            className={`p-2 rounded-lg border transition 
-                                ${defaultIcon === id ? 'border-black bg-gray-100' : 'border-gray-200 hover:bg-gray-50'}`}
-                        >
-                            <Icon size={20} />
-                        </button>
-                    ))}
-                </div>
+        <div className='min-h-screen bg-[#0f172a] text-white flex flex-col items-center p-6 gap-8'>
+            <div className='text-center space-y-2'>
+                <h1 className='text-3xl font-bold'>react-icon-cursor</h1>
+                <p className='text-gray-400 text-sm'>Play with cursor icons. What feels fun?</p>
             </div>
 
-            <div>
-                <h4 className='text-sm font-medium mb-2 text-gray-500'>Pointer</h4>
-                <div className='flex flex-wrap gap-2'>
-                    {pointerIcons.map(({ id, Icon }) => (
-                        <button
-                            key={id}
-                            onClick={() => setPointerIcon(id)}
-                            className={`p-2 rounded-lg border transition 
-                                ${pointerIcon === id ? 'border-black bg-gray-100' : 'border-gray-200 hover:bg-gray-50'}`}
-                        >
-                            <Icon size={20} />
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            <div className='flex flex-wrap gap-3'>
-                {colors.map((c) => (
-                    <button
-                        key={c}
-                        onClick={() => setColor(c)}
-                        className={`w-8 h-8 rounded-md border transition 
-                            ${color === c ? 'border-black scale-110' : 'border-gray-300'}`}
-                        style={{ background: c }}
+            <div className='w-full max-w-md bg-[#111827] border border-gray-800 rounded-2xl p-5 space-y-6 shadow-xl'>
+                <div>
+                    <label className='text-sm text-gray-400'>Size: {size}px</label>
+                    <input
+                        type='range'
+                        min='16'
+                        max='64'
+                        value={size}
+                        onChange={(e) => setSize(Number(e.target.value))}
+                        className='w-full'
                     />
-                ))}
+                </div>
+
+                {/* Colors */}
+                <div>
+                    <label className='text-sm text-gray-400'>Color</label>
+                    <div className='flex flex-wrap gap-2 mt-2'>
+                        {colors.map((c) => (
+                            <button
+                                key={c}
+                                onClick={() => setColor(c)}
+                                className={`
+                                    w-8 h-8 rounded-lg border-2 transition
+                                    ${color === c ? 'border-white scale-110' : 'border-transparent'}
+                                `}
+                                style={{ backgroundColor: c }}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Icons */}
+                <div>
+                    <label className='text-sm text-gray-400'>Icon</label>
+                    <div className='grid grid-cols-5 gap-2 mt-2'>
+                        {Object.entries(iconMap).map(([key, Icon]) => {
+                            const isActive = iconType === key;
+
+                            return (
+                                <button
+                                    key={key}
+                                    onClick={() => setIconType(key)}
+                                    className={`
+                                        p-3 rounded-xl border transition flex items-center justify-center
+                                        ${
+                                            isActive
+                                                ? 'bg-blue-500 text-white border-blue-500'
+                                                : 'bg-[#020617] text-gray-300 border-gray-700 hover:bg-gray-800'
+                                        }
+                                    `}
+                                >
+                                    <Icon size={18} />
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                <div>
+                    <label className='text-sm text-gray-400'>Hotspot</label>
+
+                    <div className='relative mt-3 w-40 h-40 mx-auto bg-[#020617] border border-gray-700 rounded-xl flex items-center justify-center'>
+                        {(() => {
+                            const SelectedIcon = selectedIcon;
+                            return (
+                                <SelectedIcon
+                                    size={160}
+                                    style={{ color, opacity: '0.2' }}
+                                />
+                            );
+                        })()}
+
+                        {hotspotPositions.map((pos) => {
+                            const isActive = hotspot === pos;
+
+                            const positionMap = {
+                                topLeft: 'top-1 left-1',
+                                top: 'top-1 left-1/2 -translate-x-1/2',
+                                topRight: 'top-1 right-1',
+                                left: 'left-1 top-1/2 -translate-y-1/2',
+                                center: 'left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
+                                right: 'right-1 top-1/2 -translate-y-1/2',
+                                bottomLeft: 'bottom-1 left-1',
+                                bottom: 'bottom-1 left-1/2 -translate-x-1/2',
+                                bottomRight: 'bottom-1 right-1',
+                            };
+
+                            return (
+                                <button
+                                    key={pos}
+                                    onClick={() => setHotspot(pos)}
+                                    className={`
+                                        absolute w-4 h-4 rounded-full border
+                                        ${
+                                            isActive
+                                                ? 'bg-blue-500 border-white scale-125'
+                                                : 'bg-gray-500 border-gray-300 opacity-70 hover:opacity-100'
+                                        }
+                                        ${positionMap[pos]}
+                                    `}
+                                />
+                            );
+                        })}
+                    </div>
+
+                    <p className='text-xs text-gray-500 mt-2 text-center'>Click position = actual click point</p>
+                </div>
             </div>
 
-            <div className='space-y-2'>
-                <label className='text-sm text-gray-600'>Size: {size}</label>
-                <input
-                    className='w-full cursor-pointer'
-                    type='range'
-                    min={16}
-                    max={48}
-                    value={size}
-                    onChange={(e) => setSize(Number(e.target.value))}
-                />
-            </div>
+            <pre className='bg-black text-green-400 p-4 rounded text-sm overflow-auto w-full max-w-md'>
+                {JSON.stringify(config, null, 2)}
+            </pre>
         </div>
     );
 }
