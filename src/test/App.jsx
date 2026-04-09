@@ -14,16 +14,18 @@ export default function App() {
 
     const iconList = [
         FaArrowPointer,
+        HiCursorClick,
         FaHandPointer,
         BsFillMouseFill,
         FaGhost,
-        FaRocket,
+
+        FaCross,
         FaHeart,
         FaSkull,
         FaStar,
         FaBug,
-        HiCursorClick,
-        FaCross,
+
+        FaRocket,
         BsFillCursorFill,
         FaWandSparkles,
         FaGun,
@@ -32,7 +34,7 @@ export default function App() {
 
     const selectedIcon = iconList[iconType];
 
-    const colors = ['#60a5fa', '#f472b6', '#34d399', '#facc15', '#f87171', '#a78bfa', '#fb923c', '#22d3ee', '#e5e7eb', '#111827'];
+    const colors = ['#72b4ff', '#fe89c9', '#72ffc7', '#ffe564', '#ff7676', '#e089ff', '#ffac67', '#8df2ff', '#f3f4f6'];
 
     const hotspotPositions = ['topLeft', 'top', 'topRight', 'left', 'center', 'right', 'bottomLeft', 'bottom', 'bottomRight'];
 
@@ -40,7 +42,7 @@ export default function App() {
         '*': {
             icon: selectedIcon,
             size,
-            style: { color },
+            style: { color, filter: 'saturate(1.5)' },
             hotspot,
             fallback: 'auto',
         },
@@ -164,8 +166,27 @@ export default function App() {
                 </div>
             </div>
 
-            <pre className='bg-black text-green-400 p-4 rounded text-sm overflow-auto w-full max-w-md'>
-                {JSON.stringify(config, null, 2)}
+            <pre className='bg-black text-white p-4 rounded text-sm overflow-auto w-full max-w-md whitespace-pre-wrap'>
+                {`# Install
+
+npm install react-icon-cursor react-icons
+
+# Usage
+
+import useReactIconCursor from 'react-icon-cursor';
+import { ${selectedIcon.name} } from 'react-icons/${selectedIcon.name.startsWith('Fa') ? 'fa6' : selectedIcon.name.startsWith('Bs') ? 'bs' : selectedIcon.name.startsWith('Hi') ? 'hi' : selectedIcon.name.startsWith('Pi') ? 'pi' : 'fa6'}';
+
+const config = {
+  '*': {
+    icon: ${selectedIcon.name},
+    size: ${size},
+    style: { color: '${color}' },
+    hotspot: '${hotspot}',
+    fallback: 'auto',
+  },
+};
+
+useReactIconCursor(config);`}
             </pre>
         </div>
     );
