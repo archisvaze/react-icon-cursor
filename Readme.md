@@ -119,10 +119,17 @@ style: {
 }
 ```
 
-You can pass anything React accepts:
+You can pass any style attributes that static svgs support:
 
 - color
+- fill
+- stroke
+- strokeWidth
 - opacity
+- transform
+- transformOrigin
+- transformBox
+- filter
 
 ---
 
@@ -159,7 +166,7 @@ hotspot: [10, 10];
 Fallback cursor if something fails.
 
 ```js
-fallback: 'pointer';
+fallback: 'auto';
 ```
 
 ---
@@ -195,8 +202,13 @@ const config = {
 
 - Very large sizes can look blurry depending on the browser
 - Some browsers clamp cursor size
-- `!important` is used intentionally to override defaults
 - If your cursor is not updating, check selector specificity
+- Animations do not work (cursor images are always static)
+- Layout styles like `margin`, `padding`, `position` are ignored
+- `background` / `backgroundColor` won’t apply
+- Styles may not override icons with hardcoded `fill`/`stroke`
+- External CSS cannot target the SVG (it’s a data URL)
+- Transforms may need `transformBox: 'fill-box'` for consistency
 
 ---
 

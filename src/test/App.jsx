@@ -9,7 +9,7 @@ import useReactIconCursor from '../index.js';
 export default function App() {
     const [size, setSize] = useState(28);
     const [color, setColor] = useState('#60a5fa');
-    const [iconType, setIconType] = useState(0); // now index
+    const [iconType, setIconType] = useState(0);
     const [hotspot, setHotspot] = useState('topLeft');
 
     const iconList = [
