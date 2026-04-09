@@ -54,7 +54,7 @@ export default function App() {
         <div className='min-h-screen bg-[#0f172a] text-white flex flex-col items-center p-6 gap-8'>
             <div className='text-center space-y-2'>
                 <h1 className='text-3xl font-bold'>react-icon-cursor</h1>
-                <p className='text-gray-400 text-sm'>Play with cursor icons. What feels fun?</p>
+                <p className='text-gray-400 text-sm'>Turn any React icon into your cursor.</p>
             </div>
 
             <div className='w-full max-w-md bg-[#111827] border border-gray-800 rounded-2xl p-5 space-y-6 shadow-xl'>
