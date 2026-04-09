@@ -4,7 +4,7 @@ import { FaCross } from 'react-icons/fa';
 import { FaArrowPointer, FaBug, FaGhost, FaGun, FaHandPointer, FaHeart, FaRocket, FaSkull, FaStar, FaWandSparkles } from 'react-icons/fa6';
 import { HiCursorClick } from 'react-icons/hi';
 import { PiSwordFill } from 'react-icons/pi';
-import useReactIconCursor from '../index.js';
+import useReactIconCursor from '../useReactIconCursor';
 
 export default function App() {
     const [size, setSize] = useState(28);
